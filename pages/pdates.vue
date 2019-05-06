@@ -44,13 +44,14 @@
       <v-data-table :headers="headers" :items="computedData" :expand="expand" item-key="name" hide-actions >
         <template v-slot:items="props">
           <tr @click="props.expanded = !props.expanded">
-            <td :class="props.item.status+'--text'">{{ props.item.statusdata }}</td>
-            <td>{{ props.item.shipment }}</td>
-            <td class="text-xs-right">{{ props.item.calories }}</td>
-            <td class="text-xs-right">{{ props.item.fat }}</td>
-            <td class="text-xs-right">{{ props.item.carbs }}</td>
-            <td class="text-xs-right">{{ props.item.protein }}</td>
-            <td class="text-xs-right">{{ props.item.iron }}</td>
+            <!-- <td :class="props.item.status+'--text'">{{ props.item.statusdata }}</td> -->
+            <!-- <td>{{ props.item.shipment }}</td> -->
+            <td>{{ props.item.shipmentfrom }}</td>
+            <td>{{ props.item.shipmentto }}</td>
+            <td>{{ props.item.product }}</td>
+            <td>{{ props.item.ordernum }}</td>
+            <td>{{ props.item.quantity }}</td>
+            <td>{{ props.item.firstofficenote }}</td>
           </tr>
         </template>
         <template v-slot:expand="props">
@@ -69,7 +70,14 @@
         </template>
       </v-data-table>
     </v-flex>
+  <v-layout>
+    <p>errors:</p>
+    <li v-for="(error, index) of errors" :key="index">
+      {{error.message}}
+    </li>
   </v-layout>
+  </v-layout>
+
 </template>
 <script>
 import axios from 'axios'
@@ -82,15 +90,17 @@ export default {
       lesstendaysIsActive: true,
       moretendaysIsActive: true,
       expand: false,
-      info:[],
+      posts: [],
+      errors: [],
       headers: [
-        { text: "Статус", value: "status", sortable: false },
-        { text: "Отгрузка", value: "shipment", align: "left", sortable: false},
+        { text: "Отправка от", value: "status", sortable: false },
+        { text: "Отправка до", value: "shipment", align: "left", sortable: false},
         { text: "Продукция", value: "calories", sortable: false },
-        { text: "Контрагент", value: "fat", sortable: false },
+        // { text: "Контрагент", value: "fat", sortable: false },
         { text: "№ Заказа", value: "carbs", sortable: false },
         { text: "Кол-во", value: "protein", sortable: false },
-        { text: "№№ СЗ", value: "iron", sortable: false }
+        { text: "СЗ", value: "firstofficenote", sortable: false },
+        // { text: "№№ СЗ", value: "iron", sortable: false }
       ],
       desserts: [
         {
@@ -419,15 +429,21 @@ export default {
         "moretendays"
       ];
       const filtered = statusarray.filter(status => this[status + "IsActive"]);
-      return this.desserts.filter(i => filtered.includes(i.status));
+      // return this.desserts.filter(i => filtered.includes(i.status));
+      return this.posts
     }
   },
-  // mounted() {
-  //   axios
-  //     .get('http://127.0.0.1:8000/api/orders/')
-  //     .then(response => (this.info = response)),
-  //     console.log(this.info)
-  // }
+  created() {
+    axios.get(`http://127.0.0.1:8000/api/orders/`)
+    .then(response => {
+      // JSON responses are automatically parsed.
+      this.posts = response.data
+    })
+    .catch(e => {
+      this.errors.push(e)
+    }),
+    console.log(this.posts)
+  }
 };
 </script>
 <style>
