@@ -46,9 +46,10 @@
           <tr @click="props.expanded = !props.expanded">
             <!-- <td :class="props.item.status+'--text'">{{ props.item.statusdata }}</td> -->
             <!-- <td>{{ props.item.shipment }}</td> -->
-            <td>{{ props.item.shipmentfrom }}</td>
-            <td>{{ props.item.shipmentto }}</td>
+            <td :class="props.item.status+'--text'">{{ props.item.statusdata }}</td>
+            <td>{{ props.item.dates }}</td>
             <td>{{ props.item.product }}</td>
+            <td>{{ props.item.customer }}</td>
             <td>{{ props.item.ordernum }}</td>
             <td>{{ props.item.quantity }}</td>
             <td>{{ props.item.firstofficenote }}</td>
@@ -93,12 +94,12 @@ export default {
       posts: [],
       errors: [],
       headers: [
-        { text: "Отправка от", value: "status", sortable: false },
-        { text: "Отправка до", value: "shipment", align: "left", sortable: false},
-        { text: "Продукция", value: "calories", sortable: false },
-        // { text: "Контрагент", value: "fat", sortable: false },
-        { text: "№ Заказа", value: "carbs", sortable: false },
-        { text: "Кол-во", value: "protein", sortable: false },
+        { text: "Статус", value: "statusdata", sortable: false },
+        { text: "Отправка", value: "dates", align: "left", sortable: false},
+        { text: "Продукция", value: "product", sortable: false },
+        { text: "Контрагент", value: "customer", sortable: false },
+        { text: "№ Заказа", value: "ordernum", sortable: false },
+        { text: "Кол-во", value: "quantity", sortable: false },
         { text: "СЗ", value: "firstofficenote", sortable: false },
         // { text: "№№ СЗ", value: "iron", sortable: false }
       ],
@@ -429,8 +430,8 @@ export default {
         "moretendays"
       ];
       const filtered = statusarray.filter(status => this[status + "IsActive"]);
-      // return this.desserts.filter(i => filtered.includes(i.status));
-      return this.posts
+      return this.posts.filter(i => filtered.includes(i.status));
+      // return this.posts
     }
   },
   created() {
