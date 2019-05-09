@@ -112,6 +112,11 @@ export default {
           icon: 'date_range',
           title: 'Отчет по датам',
           to: '/pdates'
+        },
+        {
+          icon: 'date_range',
+          title: 'Отчет по датам',
+          to: '/test'
         }
       ],
       miniVariant: false,

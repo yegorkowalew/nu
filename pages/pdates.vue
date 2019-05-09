@@ -41,13 +41,22 @@
       <v-toolbar flat color="white">
         <v-toolbar-title>Отчет по датам</v-toolbar-title>
       </v-toolbar>
-      <v-data-table :headers="headers" :items="computedData" :expand="expand" item-key="name" hide-actions >
+      <v-data-table 
+      :headers="headers" 
+      :items="computedData" 
+      :expand="expand" 
+      item-key="ordernum"
+      :loading="loading"
+      hide-actions >
         <template v-slot:items="props">
           <tr @click="props.expanded = !props.expanded">
             <!-- <td :class="props.item.status+'--text'">{{ props.item.statusdata }}</td> -->
             <!-- <td>{{ props.item.shipment }}</td> -->
-            <td :class="props.item.status+'--text'">{{ props.item.statusdata }}</td>
-            <td>{{ props.item.dates }}</td>
+            <!-- <td :class="props.item.status+'--text'">{{ props.item.statusdata }}</td> -->
+            <td class="text-xs-right" v-if="props.item.status === 'ready'" :class="props.item.status+'--text'">Готов</td>
+            <td class="text-xs-right" v-else-if="props.item.status === 'notproduced'" :class="props.item.status+'--text'">Н/П</td>
+            <td class="text-xs-right" v-else :class="props.item.status+'--text'">{{ props.item.statusdata }}дн.</td>
+            <td class="lines text-xs-right">{{ props.item.dates }}</td>
             <td>{{ props.item.product }}</td>
             <td>{{ props.item.customer }}</td>
             <td>{{ props.item.ordernum }}</td>
@@ -56,13 +65,14 @@
           </tr>
         </template>
         <template v-slot:expand="props">
-          <v-card flat>
-            <v-card-text>Peek-a-boo!</v-card-text>
-          </v-card>
+          <!-- <v-card flat>
+            <v-card-text>{{ props.item.dates }}</v-card-text>
+          </v-card> -->
+          <tblitem :itid="props.item.id"></tblitem>
         </template>
         <v-progress-linear v-slot:progress color="primary" indeterminate></v-progress-linear>
         <template v-slot:no-data>
-          <v-alert :value="true" color="error" icon="warning">Извините, нет ничего для отображения.</v-alert>
+          <v-alert :value="true" color="secondary" icon="warning">Извините, нет ничего для отображения.</v-alert>
         </template>
         <template v-slot:footer>
           <td :colspan="headers.length">
@@ -81,16 +91,20 @@
 
 </template>
 <script>
-import axios from 'axios'
+import tblitem from "~/components/Tableitem.vue";
+import axios from 'axios';
 export default {
-  data() {
-    return {
+  components: {tblitem, },
+    data() {
+      return {
+      
       notproducedIsActive: false,
       readyIsActive: false,
       overdueIsActive: true,
       lesstendaysIsActive: true,
       moretendaysIsActive: true,
       expand: false,
+      loading: true,
       posts: [],
       errors: [],
       headers: [
@@ -435,10 +449,11 @@ export default {
     }
   },
   created() {
-    axios.get(`http://127.0.0.1:8000/api/orders/`)
+    axios.get(`http://127.0.0.1:8000/api/dateorder/`)
     .then(response => {
       // JSON responses are automatically parsed.
       this.posts = response.data
+      this.loading = false;
     })
     .catch(e => {
       this.errors.push(e)
@@ -451,5 +466,15 @@ export default {
 table.v-table tbody td {
   font-size: 14px;
   height: 12px;
+}
+table.v-table thead td:not(:nth-child(1)), table.v-table tbody td:not(:nth-child(1)), table.v-table thead th:not(:nth-child(1)), table.v-table tbody th:not(:nth-child(1)), table.v-table thead td:first-child, table.v-table tbody td:first-child, table.v-table thead th:first-child, table.v-table tbody th:first-child {
+  padding-right: 0px;
+  padding-left: 10px;
+}
+.lines {
+    /* background-color: beige; */
+    white-space: nowrap; /* Запрещаем перенос строк */
+    /* overflow: hidden; Обрезаем все, что не помещается в область */
+    /* text-overflow: ellipsis; Добавляем многоточие */
 }
 </style>
