@@ -72,7 +72,12 @@
         </template>
         <v-progress-linear v-slot:progress color="primary" indeterminate></v-progress-linear>
         <template v-slot:no-data>
-          <v-alert :value="true" color="secondary" icon="warning">Извините, нет ничего для отображения.</v-alert>
+          <v-alert 
+          :value="true" 
+          color="secondary" 
+          icon="warning"
+          outline
+          >Извините, нет ничего для отображения.</v-alert>
         </template>
         <template v-slot:footer>
           <td :colspan="headers.length">
