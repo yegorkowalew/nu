@@ -126,7 +126,8 @@ export default {
   },
   created() {
     axios
-      .get(`http://127.0.0.1:8000/api/dateorder/` + this.itid)
+      .get(`http://127.0.0.1:8000/api/dateorder/${this.itid}/`)
+       
       .then(response => {
         // JSON responses are automatically parsed.
         this.posts = response.data;

@@ -24,6 +24,7 @@ export default {
     ]
   },
 
+
   /*
   ** Customize the progress-bar color
   */
@@ -47,7 +48,12 @@ export default {
   ** Nuxt.js modules
   */
   modules: [
+    '@nuxtjs/axios',
   ],
+
+  axios: {
+    baseURL:"127.0.0.1:8000/api/"
+  },
 
   /*
   ** Build configuration
@@ -65,5 +71,13 @@ export default {
     */
     extend(config, ctx) {
     }
-  }
+  },
+  axios: {
+    baseURL: 'http://127.0.0.1:8000/api/',
+  },
 }
+// module.exports = {
+//   modules: [
+//     '@nuxtjs/axios',
+//   ],
+// }
