@@ -50,9 +50,6 @@
       hide-actions >
         <template v-slot:items="props">
           <tr @click="props.expanded = !props.expanded">
-            <!-- <td :class="props.item.status+'--text'">{{ props.item.statusdata }}</td> -->
-            <!-- <td>{{ props.item.shipment }}</td> -->
-            <!-- <td :class="props.item.status+'--text'">{{ props.item.statusdata }}</td> -->
             <td class="text-xs-right" v-if="props.item.status === 'ready'" :class="props.item.status+'--text'">Готов</td>
             <td class="text-xs-right" v-else-if="props.item.status === 'notproduced'" :class="props.item.status+'--text'">Н/П</td>
             <td class="text-xs-right" v-else :class="props.item.status+'--text'">{{ props.item.statusdata }}дн.</td>
@@ -65,19 +62,17 @@
           </tr>
         </template>
         <template v-slot:expand="props">
-          <!-- <v-card flat>
-            <v-card-text>{{ props.item.dates }}</v-card-text>
-          </v-card> -->
           <tblitem :itid="props.item.id"></tblitem>
         </template>
         <v-progress-linear v-slot:progress color="primary" indeterminate></v-progress-linear>
         <template v-slot:no-data>
-          <v-alert 
-          :value="true" 
-          color="secondary" 
-          icon="warning"
-          outline
-          >Извините, нет ничего для отображения.</v-alert>
+          <v-alert :value="true" color="secondary" icon="warning">{{tableAllertMessage}}
+            <ul v-if="errors">
+              <li v-for="(error, index) of errors" :key="index">
+                {{error.message}}
+              </li>
+            </ul>
+          </v-alert>
         </template>
         <template v-slot:footer>
           <td :colspan="headers.length">
@@ -86,23 +81,17 @@
         </template>
       </v-data-table>
     </v-flex>
-  <v-layout>
-    <p>errors:</p>
-    <li v-for="(error, index) of errors" :key="index">
-      {{error.message}}
-    </li>
-  </v-layout>
   </v-layout>
 
 </template>
 <script>
 import tblitem from "~/components/Tableitem.vue";
-import axios from 'axios';
 export default {
   components: {tblitem, },
     data() {
       return {
-      
+      tableAllertMessage:'',
+      defaulttableAllertMessage:'Извините, нет ничего для отображения',
       notproducedIsActive: false,
       readyIsActive: false,
       overdueIsActive: true,
@@ -120,319 +109,6 @@ export default {
         { text: "№ Заказа", value: "ordernum", sortable: false },
         { text: "Кол-во", value: "quantity", sortable: false },
         { text: "СЗ", value: "firstofficenote", sortable: false },
-        // { text: "№№ СЗ", value: "iron", sortable: false }
-      ],
-      desserts: [
-        {
-          status: "notproduced",
-          statusdata: "н/п",
-          shipment: "23.02.2019",
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0,
-          iron: "1%"
-        },
-        {
-          status: "notproduced",
-          statusdata: "н/п",
-          shipment: "12.02.2018",
-          calories: 237,
-          fat: 9.0,
-          carbs: 37,
-          protein: 4.3,
-          iron: "1%"
-        },
-        {
-          status: "ready",
-          statusdata: "готов",
-          shipment: "02.03.2019",
-          calories: 262,
-          fat: 16.0,
-          carbs: 23,
-          protein: 6.0,
-          iron: "7%"
-        },
-        {
-          status: "ready",
-          statusdata: "готов",
-          shipment: "22.02.2019",
-          calories: 305,
-          fat: 3.7,
-          carbs: 67,
-          protein: 4.3,
-          iron: "8%"
-        },
-        {
-          status: "overdue",
-          statusdata: "-10",
-          shipment: "25.05.2019",
-          calories: 356,
-          fat: 16.0,
-          carbs: 49,
-          protein: 3.9,
-          iron: "16%"
-        },
-        {
-          status: "lesstendays",
-          statusdata: "3",
-          shipment: "30.12.2019",
-          calories: 375,
-          fat: 0.0,
-          carbs: 94,
-          protein: 0.0,
-          iron: "0%"
-        },
-        {
-          status: "moretendays",
-          statusdata: "23",
-          shipment: "12.12.2019",
-          calories: 392,
-          fat: 0.2,
-          carbs: 98,
-          protein: 0,
-          iron: "2%"
-        },
-        {
-          status: "lesstendays",
-          statusdata: "5",
-          shipment: "02.03.2019",
-          calories: 408,
-          fat: 3.2,
-          carbs: 87,
-          protein: 6.5,
-          iron: "45%"
-        },
-        {
-          status: "moretendays",
-          statusdata: "55",
-          shipment: "15.06.2019",
-          calories: 452,
-          fat: 25.0,
-          carbs: 51,
-          protein: 4.9,
-          iron: "22%"
-        },
-        {
-          status: "overdue",
-          statusdata: "-7",
-          shipment: "08.08.2019",
-          calories: 518,
-          fat: 26.0,
-          carbs: 65,
-          protein: 7,
-          iron: "6%"
-        },
-        {
-          status: "overdue",
-          statusdata: "-10",
-          shipment: "05.05.2019",
-          calories: 356,
-          fat: 16.0,
-          carbs: 49,
-          protein: 3.9,
-          iron: "16%"
-        },
-        {
-          status: "lesstendays",
-          statusdata: "3",
-          shipment: "02.07.2018",
-          calories: 375,
-          fat: 0.0,
-          carbs: 94,
-          protein: 0.0,
-          iron: "0%"
-        },
-        {
-          status: "moretendays",
-          statusdata: "23",
-          shipment: "20.20.2019",
-          calories: 392,
-          fat: 0.2,
-          carbs: 98,
-          protein: 0,
-          iron: "2%"
-        },
-        {
-          status: "lesstendays",
-          statusdata: "5",
-          shipment: "Honeycomb 5",
-          calories: 408,
-          fat: 3.2,
-          carbs: 87,
-          protein: 6.5,
-          iron: "45%"
-        },
-        {
-          status: "moretendays",
-          statusdata: "55",
-          shipment: "Donut 23",
-          calories: 452,
-          fat: 25.0,
-          carbs: 51,
-          protein: 4.9,
-          iron: "22%"
-        },
-        {
-          status: "overdue",
-          statusdata: "-7",
-          shipment: "KitKat xs",
-          calories: 518,
-          fat: 26.0,
-          carbs: 65,
-          protein: 7,
-          iron: "6%"
-        },
-        {
-          status: "notproduced",
-          statusdata: "н/п",
-          shipment: "Ice cream sandwich 12",
-          calories: 237,
-          fat: 9.0,
-          carbs: 37,
-          protein: 4.3,
-          iron: "1%"
-        },
-        {
-          status: "ready",
-          statusdata: "готов",
-          shipment: "Eclair 162",
-          calories: 262,
-          fat: 16.0,
-          carbs: 23,
-          protein: 6.0,
-          iron: "7%"
-        },
-        {
-          status: "ready",
-          statusdata: "готов",
-          shipment: "Cupcake 305",
-          calories: 305,
-          fat: 3.7,
-          carbs: 67,
-          protein: 4.3,
-          iron: "8%"
-        },
-        {
-          status: "overdue",
-          statusdata: "-10",
-          shipment: "Gingerbread 356",
-          calories: 356,
-          fat: 16.0,
-          carbs: 49,
-          protein: 3.9,
-          iron: "16%"
-        },
-        {
-          status: "lesstendays",
-          statusdata: "3",
-          shipment: "Jelly bean 35794",
-          calories: 375,
-          fat: 0.0,
-          carbs: 94,
-          protein: 0.0,
-          iron: "0%"
-        },
-        {
-          status: "moretendays",
-          statusdata: "23",
-          shipment: "Lollipop 392",
-          calories: 392,
-          fat: 0.2,
-          carbs: 98,
-          protein: 0,
-          iron: "2%"
-        },
-        {
-          status: "lesstendays",
-          statusdata: "5",
-          shipment: "Honeycomb 408",
-          calories: 408,
-          fat: 3.2,
-          carbs: 87,
-          protein: 6.5,
-          iron: "45%"
-        },
-        {
-          status: "moretendays",
-          statusdata: "55",
-          shipment: "Donut 452",
-          calories: 452,
-          fat: 25.0,
-          carbs: 51,
-          protein: 4.9,
-          iron: "22%"
-        },
-        {
-          status: "overdue",
-          statusdata: "-7",
-          shipment: "KitKat 518",
-          calories: 518,
-          fat: 26.0,
-          carbs: 65,
-          protein: 7,
-          iron: "6%"
-        },
-        {
-          status: "overdue",
-          statusdata: "-10",
-          shipment: "Gingerbread 35610",
-          calories: 356,
-          fat: 16.0,
-          carbs: 49,
-          protein: 3.9,
-          iron: "16%"
-        },
-        {
-          status: "lesstendays",
-          statusdata: "3",
-          shipment: "Jelly bean 357",
-          calories: 375,
-          fat: 0.0,
-          carbs: 94,
-          protein: 0.0,
-          iron: "0%"
-        },
-        {
-          status: "moretendays",
-          statusdata: "23",
-          shipment: "Lollipop 39a2",
-          calories: 392,
-          fat: 0.2,
-          carbs: 98,
-          protein: 0,
-          iron: "2%"
-        },
-        {
-          status: "lesstendays",
-          statusdata: "5",
-          shipment: "Honeycomb 4080",
-          calories: 408,
-          fat: 3.2,
-          carbs: 87,
-          protein: 6.5,
-          iron: "45%"
-        },
-        {
-          status: "moretendays",
-          statusdata: "55",
-          shipment: "Donut 45255",
-          calories: 452,
-          fat: 25.0,
-          carbs: 51,
-          protein: 4.9,
-          iron: "22%"
-        },
-        {
-          status: "overdue",
-          statusdata: "-7",
-          shipment: "KitKat1 518",
-          calories: 518,
-          fat: 26.0,
-          carbs: 65,
-          protein: 7,
-          iron: "6%"
-        }
       ]
     };
   },
@@ -453,17 +129,22 @@ export default {
       // return this.posts
     }
   },
-  created() {
-    axios.get(`http://127.0.0.1:8000/api/dateorder/`)
-    .then(response => {
-      // JSON responses are automatically parsed.
-      this.posts = response.data
+  methods: {
+    async fetchPostsData() {
+      this.tableAllertMessage = 'Загрузка...';
+      const postsdata = await this.$axios.$get(`${this.$axios.defaults.baseURL}dateorder/`).then((response) => {
+        this.posts = response;
+        this.loading = false;
+        this.tableAllertMessage = this.defaulttableAllertMessage;
+      }).catch(e => {
+      this.errors.push(e);
+      this.tableAllertMessage = 'Извините, возникли ошибки:';
       this.loading = false;
     })
-    .catch(e => {
-      this.errors.push(e)
-    }),
-    console.log(this.posts)
+    }
+  },
+  created() {
+    this.fetchPostsData()
   }
 };
 </script>
@@ -477,9 +158,6 @@ table.v-table thead td:not(:nth-child(1)), table.v-table tbody td:not(:nth-child
   padding-left: 10px;
 }
 .lines {
-    /* background-color: beige; */
     white-space: nowrap; /* Запрещаем перенос строк */
-    /* overflow: hidden; Обрезаем все, что не помещается в область */
-    /* text-overflow: ellipsis; Добавляем многоточие */
 }
 </style>

@@ -110,6 +110,11 @@ export default {
         },
         {
           icon: 'date_range',
+          title: 'Служебные записки',
+          to: '/officenotes'
+        },
+        {
+          icon: 'date_range',
           title: 'Отчет по датам',
           to: '/pdates'
         },
