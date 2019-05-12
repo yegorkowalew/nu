@@ -28,16 +28,49 @@
           </v-flex>
         </v-card-title>
         <div v-if="collapsed">
-        <v-card-actions v-if="dates">
-          <v-flex class="tbl">
-            <div class="tblitem tblstatus">75дн.</div>
-            <div class="tblitem tbldate">01.01-01.02.2020</div>
-            <div class="tblitem tblname">Силоси металеві вентильовані уніфіковані типу СМВУ.110.12.К45.В12</div>
-            <div class="tblitem tblnumber">2311714</div>
-            <div class="tblitem tblquantity">60</div>
-            <div class="tblitem tblnumofficenotes">85, 2604191, 2604193</div>
-          </v-flex>
-        </v-card-actions>
+          <v-layout v-if="dates" row wrap>
+            <v-flex xs12 class="tbl">
+              <div class="tblitem tblstatus hed">Статус</div>
+              <div class="tblitem tbldate hed">Отгрузка</div>
+              <div class="tblitem tblname hed">Продукция</div>
+              <div class="tblitem tblnumber hed">№ Заказа</div>
+              <div class="tblitem tblquantity hed">Кол-во</div>
+              <div class="tblitem tblnumofficenotes hed">№№ СЗ</div>
+              <div class="tblitem officenote hed">СЗ</div>
+              <div class="tblitem picking hed">Компл.</div>
+              <div class="tblitem shipping hed">Отгр.</div>
+              <div class="tblitem designer hed">Констр.</div>
+              <div class="tblitem drawingchanges hed">Изм.Ч.</div>
+            </v-flex>
+
+            <v-flex xs12 class="tbl">
+              <div class="tblitem tblstatus">-175дн.</div>
+              <div class="tblitem tbldate">01.01-01.02.2020</div>
+              <div class="tblitem tblname">Силоси металеві вентильовані уніфіковані типу СМВУ.110.12.К45.В12</div>
+              <div class="tblitem tblnumber">2311714</div>
+              <div class="tblitem tblquantity">60000</div>
+              <div class="tblitem tblnumofficenotes">2604191, 2604191, 2604193, 2604193</div>
+              <div class="tblitem officenote">0дн.</div>
+              <div class="tblitem picking">-1дн.</div>
+              <div class="tblitem shipping">-12дн.</div>
+              <div class="tblitem designer">-22дн.</div>
+              <div class="tblitem drawingchanges">0дн.</div>
+            </v-flex>
+
+            <v-flex xs12 class="tbl">
+              <div class="tblitem tblstatus">-175дн.</div>
+              <div class="tblitem tbldate">01.01-01.02.2020</div>
+              <div class="tblitem tblname">Силоси металеві вентильовані уніфіковані типу СМВУ.110.12.К45.В12</div>
+              <div class="tblitem tblnumber">2311714</div>
+              <div class="tblitem tblquantity">60000</div>
+              <div class="tblitem tblnumofficenotes">2604191, 2604191, 2604193, 2604193</div>
+              <div class="tblitem officenote">0дн.</div>
+              <div class="tblitem picking">-1дн.</div>
+              <div class="tblitem shipping">-12дн.</div>
+              <div class="tblitem designer">-22дн.</div>
+              <div class="tblitem drawingchanges">0дн.</div>
+            </v-flex>
+          </v-layout>
 
         <v-card-actions v-if="schedule">
           <div>График</div>
@@ -108,34 +141,91 @@ export default {
   width: 6%;
 }
 .tbl {
+  width: 100%;
   display: flex;
-  flex-wrap: nowrap;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 .tbl > .tblitem {
-  margin-right: 6px;
-  padding: 0px 8px 0px 8px;
+  margin-right: 0px;
+  padding: 0px 6px 0px 6px;
 }
+
 .tbl > .tblstatus {
-  width: 50px;
+  width: 4%;
+  min-width: 55px;
+  text-align: right;
   background-color: #f2f2f2;
 }
 .tbl > .tbldate {
-  width: 130px;
+  width: 8%;
+  min-width: 130px;
+  text-align: right;
   background-color: #d9d9d9;
 }
 .tbl > .tblname {
+  width: 43%;
+  min-width: 500px;
+  text-align: left;
   background-color: #f2f2f2;
 }
 .tbl > .tblnumber {
+  width: 5%;
+  min-width: 75px;
+  text-align: center;
   background-color: #f2f2f2;
   color: #203516;
   font-weight: bold;
 }
 .tbl > .tblquantity {
+  width: 5%;
+  min-width: 60px;
+  text-align: center;
   background-color: #f2f2f2;
   color: #550000;
 }
 .tbl > .tblnumofficenotes {
+  width: 15%;
+  min-width: 260px;
+  text-align: left;
   background-color: #f2f2f2;
+}
+/* Стили для дат */
+.tbl > .officenote {
+  width: 4%;
+  min-width: 55px;
+  text-align: left;
+  background-color: #fff2cc;
+}
+.tbl > .picking {
+  width: 4%;
+  min-width: 55px;
+  text-align: left;
+  background-color: #ecefe9;
+}
+.tbl > .shipping {
+  width: 4%;
+  min-width: 55px;
+  text-align: left;
+  background-color: #f5e9ed;
+}
+.tbl > .designer {
+  width: 4%;
+  min-width: 55px;
+  text-align: left;
+  background-color: #e6ebf2;
+}
+.tbl > .drawingchanges {
+  width: 4%;
+  min-width: 55px;
+  text-align: left;
+  background-color: #d2d7e6;
+}
+.tbl > .hed {
+  text-align: center;
+  background-color: #fff;
+  border-bottom: 1px solid #000;
+  border-top: 1px solid #000;
+  font-weight: bold;
 }
 </style>
